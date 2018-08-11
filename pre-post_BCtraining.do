@@ -12,9 +12,10 @@
 
 	PROLOG ###################################################################*/
 
+//load pre test
 use TRAINING_2017-18_PRE-TEST,clear
 
-
+//rename default variable names
 rename (idnumber gender age marital children_under18 yrs_living_in_US ///
 	educationlevel employment annual_income living_situation religion ///
 	past_12months_stress past_12months_groupsorg MachSong ///
@@ -56,7 +57,7 @@ foreach var of varlist  heard_BC getting_older family_hist late_menopause ///
 }
 
 
-
+//label variables
 labvars ///
 	uid "ID" ///
 	gender "Gender" ///
@@ -124,7 +125,7 @@ labvars ///
 tempfile pre //saving pre as tempfile
 save `pre'
 
-
+//load post test
 use TRAINING_2017-18_POST-TEST,clear
 
 
@@ -145,7 +146,7 @@ rename (idnumber heardBC gettingolder familyhist latemenopause ///
 	mamm_perdoctor ///
 	)
 
-*this loop creates a prefix for all the post- questions
+//this loop creates a prefix for all the post- questions
 foreach var of varlist  heard_BC getting_older family_hist late_menopause ///
 	late_childbirth never_give_birth_breastfeed chest_radiation overweight ///
 	hormreplcmt_contraceptive alcohol exercise VN_US_women_lessrisk ///
@@ -188,10 +189,10 @@ labvars ///
 tempfile post //saving post as tempfile
 save `post'
 
-*merging
+*merging pre and post
 use `pre', clear
 merge 1:1 uid using `post'
-drop if _merge<3
+drop if _merge<3 //drop unmatched surveys
 drop  _merge
 
 
